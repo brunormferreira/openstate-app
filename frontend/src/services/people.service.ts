@@ -12,7 +12,8 @@ export function fetchPeople(
   if (params.perPage) query.set('perPage', String(params.perPage));
 
   const qs = query.toString();
-  return request<PeopleListResponse>(`/people${qs ? `?${qs}` : ''}`, { signal });
+  const url = qs ? `/people?${qs}` : '/people';
+  return request<PeopleListResponse>(url, { signal });
 }
 
 export function fetchPeopleFilters(signal?: AbortSignal): Promise<PeopleFiltersResponse> {

@@ -60,8 +60,7 @@ const Photo = styled.div`
 const PhotoImg = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top 20%;
+  object-fit: contain;
   transition: ${({ theme }) => `transform ${theme.transition}`};
 
   ${Card}:hover & {
