@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: openstates_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-openstates}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-openstates}
+      POSTGRES_DB: ${POSTGRES_DB:-openstates}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-openstates} -d ${POSTGRES_DB:-openstates}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5432:5432'
+
+  backend:
+    build: ./backend
+    container_name: openstates_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-openstates}:${POSTGRES_PASSWORD:-openstates}@db:5432/${POSTGRES_DB:-openstates}?schema=public
+      OPENSTATES_API_TOKEN: ${OPENSTATES_API_TOKEN}
+      OPENSTATES_API_URL: ${OPENSTATES_API_URL:-https://v3.openstates.org}
+      PORT: 3000
+      SYNC_CRON: ${SYNC_CRON:-0 0 * * *}
+      SYNC_JURISDICTION: ${SYNC_JURISDICTION:-}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(''http://127.0.0.1:3000/health'').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ports:
+      - '3000:3000'
+
+  frontend:
+    build: ./frontend
+    container_name: openstates_frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - '8080:80'
+
+volumes:
+  db_data:
