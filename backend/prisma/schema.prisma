@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id              String   @id
+  name            String
+  roleTitle       String   @map("role_title")
+  district        String?
+  image           String?
+  party           String?
+  state           String?
+  jurisdictionId  String   @map("jurisdiction_id")
+
+  @@index([state])
+  @@index([party])
+  @@index([state, party])
+
+  @@map("person")
+}
