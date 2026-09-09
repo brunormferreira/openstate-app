@@ -16,7 +16,7 @@ export interface OpenStatesPerson {
 
 export interface OpenStatesCurrentRole {
   title: string;
-  org_classification: 'upper' | 'lower' | 'executive' | string;
+  org_classification: string;
   district?: string | number;
   division_id: string;
 }

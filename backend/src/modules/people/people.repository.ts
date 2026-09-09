@@ -74,11 +74,11 @@ export class PrismaPeopleRepository implements PeopleRepository {
       states: states
         .map((s) => s.state)
         .filter((s): s is string => s !== null)
-        .sort(),
+        .sort((a, b) => a.localeCompare(b)),
       parties: parties
         .map((p) => p.party)
         .filter((p): p is string => p !== null)
-        .sort(),
+        .sort((a, b) => a.localeCompare(b)),
     };
   }
 }
