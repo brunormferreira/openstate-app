@@ -4,14 +4,14 @@ services:
     container_name: openstates_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-openstates}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-openstates}
-      POSTGRES_DB: ${POSTGRES_DB:-openstates}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
       test:
-        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-openstates} -d ${POSTGRES_DB:-openstates}']
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 5s
       timeout: 5s
       retries: 10
@@ -26,7 +26,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-openstates}:${POSTGRES_PASSWORD:-openstates}@db:5432/${POSTGRES_DB:-openstates}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
       OPENSTATES_API_TOKEN: ${OPENSTATES_API_TOKEN}
       OPENSTATES_API_URL: ${OPENSTATES_API_URL:-https://v3.openstates.org}
       PORT: 3000

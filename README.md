@@ -37,7 +37,7 @@ Open `.env` and set your token:
 OPENSTATES_API_TOKEN=your_token_here
 ```
 
-All other variables have sensible defaults and can be left as-is.
+The PostgreSQL credentials (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) are pre-filled in `.env.example` — change them if needed for your environment.
 
 ### 3. Start the stack
 
@@ -110,9 +110,21 @@ docker compose logs -f frontend
 # Run backend tests (from backend/ directory)
 cd backend && npm test
 
+# Run frontend tests (from frontend/ directory)
+cd frontend && npm test
+cd frontend && npm run test:watch   # watch mode
+
 # Type check
-cd backend && npx tsc --noEmit
-cd frontend && npx tsc --noEmit
+cd backend && npm run typecheck
+cd frontend && npm run typecheck
+
+# Lint
+cd backend && npm run lint
+cd frontend && npm run lint
+
+# Format
+cd backend && npm run format
+cd frontend && npm run format
 ```
 
 ## Project Structure
@@ -158,4 +170,5 @@ openstates/
         ├── services/      # API client layer (fetch wrapper, people, sync)
         ├── styles/        # Global styles, theme (light/dark), styled-components types
         └── utils/         # Helpers (apiErrorMessage)
+        # Unit tests (vitest) live in *.test.ts(x) alongside their sources
 ```
