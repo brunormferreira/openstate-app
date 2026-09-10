@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Wrap = styled.div`
+export const Wrap = styled.div`
   display: inline-block;
   width: 40px;
   height: 40px;
@@ -16,17 +16,9 @@ const Wrap = styled.div`
   }
 `;
 
-const Center = styled.div`
+export const Center = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px;
 `;
-
-export function Spinner() {
-  return (
-    <Center>
-      <Wrap aria-label="Loading" role="status" />
-    </Center>
-  );
-}

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { PeopleList } from '@/features/people/components/PeopleList/PeopleList';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { ThemeToggle } from '@/components/ThemeToggle/ThemeToggle';
 import { Footer } from '@/components/Footer/Footer';
 
 

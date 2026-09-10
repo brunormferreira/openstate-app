@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/Spinner/Spinner';
 import { Overlay } from './FullScreenLoader.styles';
 
 export function FullScreenLoader() {

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { useThemeMode } from '@/context/ThemeContext';
 
-const Toggle = styled.button`
+export const Toggle = styled.button`
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.space(2)};
@@ -26,27 +25,15 @@ const Toggle = styled.button`
   }
 `;
 
-const Icon = styled.span`
+export const Icon = styled.span`
   font-size: 15px;
   line-height: 1;
 `;
 
-const Label = styled.span`
+export const Label = styled.span`
   display: none;
 
   @media (min-width: 480px) {
     display: inline;
   }
 `;
-
-export function ThemeToggle() {
-  const { mode, toggleMode } = useThemeMode();
-  const nextMode = mode === 'light' ? 'dark' : 'light';
-
-  return (
-    <Toggle type="button" onClick={toggleMode} aria-label={`Switch to ${nextMode} theme`}>
-      <Icon aria-hidden="true">{mode === 'light' ? '\u{1F319}' : '\u2600\uFE0F'}</Icon>
-      <Label>{mode === 'light' ? 'Dark' : 'Light'}</Label>
-    </Toggle>
-  );
-}
