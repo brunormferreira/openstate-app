@@ -1,41 +1,12 @@
-import styled from 'styled-components';
 import { usePeople, usePeopleFilters } from '@/features/people/hooks/usePeople';
 import { usePeopleFilter } from '@/context/PeopleFilterContext';
 import { useSync } from '@/context/SyncContext';
 import { PeopleFilters } from '@/features/people/components/PeopleFilters/PeopleFilters';
 import { SyncPanel } from '@/features/people/components/SyncPanel/SyncPanel';
 import { PeopleListContent } from './PeopleListContent';
+import { Sections, Toolbar, SectionTitle, Count } from './PeopleList.styles';
 
 const PER_PAGE = 20;
-
-const Sections = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.space(5)};
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: ${({ theme }) => theme.space(2)};
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-
-  @media (min-width: 768px) {
-    font-size: 20px;
-  }
-`;
-
-const Count = styled.span`
-  font-size: 13px;
-  color: ${({ theme }) => theme.colors.textSubtle};
-`;
 
 export function PeopleList() {
   const { state, setPage } = usePeopleFilter();
