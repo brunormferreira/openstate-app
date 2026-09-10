@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { runSync } from '@/services/sync.service';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
+import { useToast } from '@/components/Toast';
 
 /** The backend syncs in the background, so refresh once now and once after it has time to finish. */
 const BACKGROUND_REFRESH_MS = 5_000;
-const STATUS_DISMISS_MS = 8_000;
 
 const PRESETS = [
   { id: 'ocd-jurisdiction/country:us/state:ga/government', label: 'Georgia' },
@@ -119,53 +119,29 @@ const PresetButton = styled.button`
   }
 `;
 
-const Status = styled.p<{ $type: 'success' | 'error' }>`
-  margin-top: ${({ theme }) => theme.space(3)};
-  font-size: 13px;
-  font-weight: 500;
-  color: ${({ theme, $type }) => ($type === 'error' ? theme.colors.danger : theme.colors.success)};
-`;
-
-interface SyncStatus {
-  type: 'success' | 'error';
-  text: string;
-}
-
 export function SyncPanel() {
   const queryClient = useQueryClient();
+  const { addToast } = useToast();
   const [jurisdiction, setJurisdiction] = useState('');
-  const [status, setStatus] = useState<SyncStatus | null>(null);
   const refreshTimer = useRef<number>();
 
   const refreshPeople = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['people'] });
   }, [queryClient]);
 
-  useEffect(() => {
-    if (!status) return;
-    const timer = window.setTimeout(() => setStatus(null), STATUS_DISMISS_MS);
-    return () => window.clearTimeout(timer);
-  }, [status]);
-
-  useEffect(() => () => window.clearTimeout(refreshTimer.current), []);
-
   const syncMutation = useMutation({
     mutationFn: runSync,
     onSuccess: () => {
-      setStatus({
-        type: 'success',
-        text: 'Sync started in the background. The list refreshes in a few seconds.',
-      });
+      addToast('success', 'Sync started. The list refreshes in a few seconds.');
       refreshPeople();
       refreshTimer.current = window.setTimeout(refreshPeople, BACKGROUND_REFRESH_MS);
     },
-    onError: (error) => setStatus({ type: 'error', text: apiErrorMessage(error) }),
+    onError: (error) => addToast('error', apiErrorMessage(error)),
   });
 
   const handleSync = () => {
     const value = jurisdiction.trim();
     if (!value || syncMutation.isPending) return;
-    setStatus(null);
     syncMutation.reset();
     syncMutation.mutate(value);
   };
@@ -207,12 +183,6 @@ export function SyncPanel() {
           </PresetButton>
         ))}
       </PresetRow>
-
-      {status && (
-        <Status $type={status.type} role={status.type === 'error' ? 'alert' : 'status'}>
-          {status.text}
-        </Status>
-      )}
     </Panel>
   );
 }
