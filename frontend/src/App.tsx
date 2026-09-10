@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { PeopleList } from '@/features/people/components/PeopleList/PeopleList';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Footer } from '@/components/Footer/Footer';
 
 
 const Page = styled.div`
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-image: ${({ theme }) => theme.colors.bgAccent};
   background-repeat: no-repeat;
 `;
@@ -48,22 +51,15 @@ const Title = styled.h1`
   }
 `;
 
-const Subtitle = styled.p`
-  font-size: 12px;
-  color: ${({ theme }) => theme.colors.textSubtle};
-
-  @media (min-width: 768px) {
-    font-size: 13px;
-  }
-`;
-
 const Main = styled.main`
+  flex: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: ${({ theme }) => `${theme.space(6)} ${theme.space(4)} ${theme.space(16)}`};
+  padding: ${({ theme }) => `${theme.space(6)} ${theme.space(4)} ${theme.space(6)}`};
+  width: 100%;
 
   @media (min-width: 768px) {
-    padding: ${({ theme }) => `${theme.space(8)} ${theme.space(6)} ${theme.space(20)}`};
+    padding: ${({ theme }) => `${theme.space(8)} ${theme.space(6)} ${theme.space(8)}`};
   }
 `;
 
@@ -74,7 +70,6 @@ export default function App() {
         <HeaderInner>
           <Brand>
             <Title>US Politicians</Title>
-            <Subtitle>Powered by the OpenStates API</Subtitle>
           </Brand>
           <ThemeToggle />
         </HeaderInner>
@@ -82,6 +77,7 @@ export default function App() {
       <Main>
         <PeopleList />
       </Main>
+      <Footer />
     </Page>
   );
 }

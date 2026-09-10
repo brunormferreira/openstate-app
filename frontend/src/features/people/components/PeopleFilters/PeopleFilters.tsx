@@ -25,7 +25,7 @@ const Label = styled.label`
 `;
 
 const Select = styled.select`
-  min-width: 150px;
+  width: 100%;
   padding: ${({ theme }) => `${theme.space(2)} ${theme.space(3)}`};
   border: 1px solid ${({ theme }) => theme.colors.borderStrong};
   border-radius: ${({ theme }) => theme.radii.md};
@@ -36,6 +36,7 @@ const Select = styled.select`
   cursor: pointer;
 
   @media (min-width: 768px) {
+    width: auto;
     min-width: 190px;
     font-size: 14px;
   }
