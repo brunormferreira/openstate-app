@@ -28,10 +28,11 @@ async function toApiError(response: Response): Promise<ApiError> {
 export interface RequestOptions {
   method?: string;
   signal?: AbortSignal;
+  timeoutMs?: number;
 }
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+  const timeout = AbortSignal.timeout(options.timeoutMs ?? REQUEST_TIMEOUT_MS);
   const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
 
   let response: Response;

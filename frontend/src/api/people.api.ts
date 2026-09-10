@@ -1,4 +1,4 @@
-import type { PeopleFiltersResponse, PeopleListResponse, PeopleQuery } from './types';
+import type { PeopleFiltersResponse, PeopleListResponse, PeopleQuery, SyncResult } from './types';
 import { request } from './client';
 
 export function fetchPeople(
@@ -20,8 +20,10 @@ export function fetchPeopleFilters(signal?: AbortSignal): Promise<PeopleFiltersR
   return request<PeopleFiltersResponse>('/people/filters', { signal });
 }
 
-export function runSync(jurisdiction: string): Promise<void> {
-  return request<void>(`/sync?jurisdiction=${encodeURIComponent(jurisdiction)}`, {
+/** A sync can paginate several upstream pages, so allow up to a minute before timing out. */
+export function runSync(jurisdiction: string): Promise<SyncResult> {
+  return request<SyncResult>(`/sync?jurisdiction=${encodeURIComponent(jurisdiction)}`, {
     method: 'POST',
+    timeoutMs: 60_000,
   });
 }

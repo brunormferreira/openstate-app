@@ -22,6 +22,12 @@ export interface PeopleFiltersResponse {
   parties: string[];
 }
 
+export interface SyncResult {
+  jurisdiction: string;
+  peopleUpserted: number;
+  durationMs: number;
+}
+
 export interface PeopleQuery {
   state?: string;
   party?: string;

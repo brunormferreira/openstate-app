@@ -1,12 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import styled from 'styled-components';
 import { runSync } from '@/api/people.api';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
-
-/** The backend syncs in the background, so refresh once now and once after it has time to finish. */
-const BACKGROUND_REFRESH_MS = 5_000;
+import { useSync } from '@/context/SyncContext';
 
 const PRESETS = [
   { id: 'ocd-jurisdiction/country:us/state:ga/government', label: 'Georgia' },
@@ -121,21 +119,30 @@ const PresetButton = styled.button`
 
 export function SyncPanel() {
   const queryClient = useQueryClient();
+  const { setSyncing } = useSync();
   const [jurisdiction, setJurisdiction] = useState('');
-  const refreshTimer = useRef<number>();
 
   const refreshPeople = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['people'] });
+    return queryClient.invalidateQueries({ queryKey: ['people'] });
   }, [queryClient]);
 
   const syncMutation = useMutation({
     mutationFn: runSync,
-    onSuccess: () => {
-      toast.success('Sync started. The list refreshes in a few seconds.');
-      refreshPeople();
-      refreshTimer.current = window.setTimeout(refreshPeople, BACKGROUND_REFRESH_MS);
+    onMutate: () => {
+      setSyncing(true);
     },
-    onError: (error) => toast.error(apiErrorMessage(error)),
+    onSuccess: (result, syncedJurisdiction) => {
+      const label =
+        PRESETS.find((preset) => preset.id === syncedJurisdiction)?.label ?? syncedJurisdiction;
+      toast.success(
+        `${label}: ${result.peopleUpserted} people synced in ${(result.durationMs / 1000).toFixed(1)}s`,
+      );
+      void refreshPeople().finally(() => setSyncing(false));
+    },
+    onError: (error) => {
+      setSyncing(false);
+      toast.error(apiErrorMessage(error));
+    },
   });
 
   const handleSync = () => {
