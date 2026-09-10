@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import type { ReactNode } from 'react';
 import { Pagination } from '@/components/Pagination/Pagination';
 import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { ErrorState } from '@/components/ErrorState/ErrorState';
-import { Spinner } from '@/components/Spinner';
+import { FullScreenLoader } from '@/components/FullScreenLoader/FullScreenLoader';
 import { PersonCard } from '@/features/people/components/PersonCard/PersonCard';
 import type { PeopleListResponse } from '@/api/types';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
@@ -24,7 +25,9 @@ const Grid = styled.div`
 `;
 
 interface PeopleListContentProps {
-  readonly isLoading: boolean;
+  readonly isInitialLoading: boolean;
+  readonly isRefreshing: boolean;
+  readonly isSyncing: boolean;
   readonly error: unknown;
   readonly data?: PeopleListResponse;
   readonly hasActiveFilters: boolean;
@@ -33,42 +36,55 @@ interface PeopleListContentProps {
 }
 
 export function PeopleListContent({
-  isLoading,
+  isInitialLoading,
+  isRefreshing,
+  isSyncing,
   error,
   data,
   hasActiveFilters,
   onRetry,
   onPageChange,
 }: PeopleListContentProps) {
-  if (isLoading) return <Spinner />;
+  const loading = isInitialLoading || isRefreshing || isSyncing;
 
-  if (error) return <ErrorState message={apiErrorMessage(error)} onRetry={onRetry} />;
-
-  if (!data) return null;
-
-  if (data.items.length === 0) {
-    return (
-      <EmptyState
-        title="No people found"
-        message={
-          hasActiveFilters
-            ? 'No one matches these filters. Try clearing them.'
-            : 'Nothing synced yet, or the sync is still running. Sync a jurisdiction above and refresh.'
-        }
-        actionLabel="Refresh"
-        onAction={onRetry}
-      />
+  let content: ReactNode;
+  if (error && !data) {
+    content = <ErrorState message={apiErrorMessage(error)} onRetry={onRetry} />;
+  } else if (!data) {
+    content = null;
+  } else if (data.items.length === 0) {
+    if (hasActiveFilters) {
+      content = (
+        <EmptyState
+          title="No people found"
+          message="No one matches these filters. Try clearing them."
+        />
+      );
+    } else {
+      content = (
+        <EmptyState
+          title="No people found"
+          message="Nothing synced yet. Use the panel above to sync a jurisdiction."
+        />
+      );
+    }
+  } else {
+    content = (
+      <>
+        <Grid>
+          {data.items.map((person) => (
+            <PersonCard key={person.id} person={person} />
+          ))}
+        </Grid>
+        <Pagination page={data.page} totalPages={data.totalPages} onPageChange={onPageChange} />
+      </>
     );
   }
 
   return (
     <>
-      <Grid>
-        {data.items.map((person) => (
-          <PersonCard key={person.id} person={person} />
-        ))}
-      </Grid>
-      <Pagination page={data.page} totalPages={data.totalPages} onPageChange={onPageChange} />
+      {loading && <FullScreenLoader />}
+      {!isInitialLoading && content}
     </>
   );
 }

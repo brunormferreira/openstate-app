@@ -23,6 +23,7 @@ export interface AppTheme {
     focusRing: string;
     photoFrom: string;
     photoTo: string;
+    overlay: string;
     party: {
       democratic: string;
       republican: string;
@@ -68,6 +69,7 @@ export const lightTheme: AppTheme = {
     focusRing: 'rgba(91, 107, 127, 0.25)',
     photoFrom: '#f0f1f4',
     photoTo: '#e4e6eb',
+    overlay: 'rgba(248, 249, 251, 0.72)',
     party: {
       democratic: '#7c8ea2',
       republican: '#a0887a',
@@ -106,6 +108,7 @@ export const darkTheme: AppTheme = {
     focusRing: 'rgba(126, 162, 199, 0.35)',
     photoFrom: '#1a2130',
     photoTo: '#121820',
+    overlay: 'rgba(10, 14, 20, 0.78)',
     party: {
       democratic: '#7ea2c7',
       republican: '#c99a8a',

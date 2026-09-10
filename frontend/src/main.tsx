@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import { ErrorBoundary } from '@/components/ErrorBoundary/ErrorBoundary';
 import { PeopleFilterProvider } from '@/context/PeopleFilterContext';
+import { SyncProvider } from '@/context/SyncContext';
 import { ThemeModeProvider } from '@/context/ThemeContext';
 import GlobalStyle from '@/styles/global';
 
@@ -23,9 +24,11 @@ createRoot(document.getElementById('root')!).render(
       <GlobalStyle />
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
-          <PeopleFilterProvider>
-            <App />
-          </PeopleFilterProvider>
+          <SyncProvider>
+            <PeopleFilterProvider>
+              <App />
+            </PeopleFilterProvider>
+          </SyncProvider>
         </QueryClientProvider>
       </ErrorBoundary>
       <Toaster position="top-right" richColors />

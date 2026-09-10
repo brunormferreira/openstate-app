@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { usePeople, usePeopleFilters } from '@/features/people/hooks/usePeople';
 import { usePeopleFilter } from '@/context/PeopleFilterContext';
+import { useSync } from '@/context/SyncContext';
 import { PeopleFilters } from '@/features/people/components/PeopleFilters/PeopleFilters';
 import { SyncPanel } from '@/features/people/components/SyncPanel/SyncPanel';
 import { PeopleListContent } from './PeopleListContent';
@@ -38,6 +39,7 @@ const Count = styled.span`
 
 export function PeopleList() {
   const { state, setPage } = usePeopleFilter();
+  const { isSyncing } = useSync();
   const filtersQuery = usePeopleFilters();
 
   const peopleQuery = usePeople({
@@ -46,6 +48,9 @@ export function PeopleList() {
     page: state.page,
     perPage: PER_PAGE,
   });
+
+  const isInitialLoading = peopleQuery.isLoading;
+  const isRefreshing = peopleQuery.isFetching && !peopleQuery.isLoading;
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
@@ -68,7 +73,9 @@ export function PeopleList() {
       </Toolbar>
 
       <PeopleListContent
-        isLoading={peopleQuery.isLoading}
+        isInitialLoading={isInitialLoading}
+        isRefreshing={isRefreshing}
+        isSyncing={isSyncing}
         error={peopleQuery.error}
         data={peopleQuery.data}
         hasActiveFilters={Boolean(state.state || state.party)}
