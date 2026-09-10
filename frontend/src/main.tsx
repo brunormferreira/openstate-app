@@ -1,9 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import { ErrorBoundary } from '@/components/ErrorBoundary/ErrorBoundary';
-import { ToastProvider } from '@/components/Toast';
 import { PeopleFilterProvider } from '@/context/PeopleFilterContext';
 import { ThemeModeProvider } from '@/context/ThemeContext';
 import GlobalStyle from '@/styles/global';
@@ -23,13 +23,12 @@ createRoot(document.getElementById('root')!).render(
       <GlobalStyle />
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
-          <ToastProvider>
-            <PeopleFilterProvider>
-              <App />
-            </PeopleFilterProvider>
-          </ToastProvider>
+          <PeopleFilterProvider>
+            <App />
+          </PeopleFilterProvider>
         </QueryClientProvider>
       </ErrorBoundary>
+      <Toaster position="top-right" richColors />
     </ThemeModeProvider>
   </StrictMode>,
 );

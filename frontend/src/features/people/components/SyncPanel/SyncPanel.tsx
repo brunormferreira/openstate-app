@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import styled from 'styled-components';
 import { runSync } from '@/api/people.api';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
-import { useToast } from '@/components/Toast';
 
 /** The backend syncs in the background, so refresh once now and once after it has time to finish. */
 const BACKGROUND_REFRESH_MS = 5_000;
@@ -121,7 +121,6 @@ const PresetButton = styled.button`
 
 export function SyncPanel() {
   const queryClient = useQueryClient();
-  const { addToast } = useToast();
   const [jurisdiction, setJurisdiction] = useState('');
   const refreshTimer = useRef<number>();
 
@@ -132,11 +131,11 @@ export function SyncPanel() {
   const syncMutation = useMutation({
     mutationFn: runSync,
     onSuccess: () => {
-      addToast('success', 'Sync started. The list refreshes in a few seconds.');
+      toast.success('Sync started. The list refreshes in a few seconds.');
       refreshPeople();
       refreshTimer.current = window.setTimeout(refreshPeople, BACKGROUND_REFRESH_MS);
     },
-    onError: (error) => addToast('error', apiErrorMessage(error)),
+    onError: (error) => toast.error(apiErrorMessage(error)),
   });
 
   const handleSync = () => {
