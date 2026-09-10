@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import type { SyncService } from './sync.service.js';
 import { AppError } from '../../shared/errors/AppError.js';
-import { logger } from '../../shared/utils/logger.js';
 import { resolveJurisdiction } from '../../shared/utils/resolveJurisdiction.js';
 
 const MAX_JURISDICTION_LENGTH = 200;
@@ -32,12 +31,15 @@ export class SyncController {
       );
     }
 
-    // Run in the background so the client responds immediately.
-    this.service
-      .run(parsedJurisdiction)
-      .then((result) => logger('Sync finished', JSON.stringify(result)))
-      .catch((error) => logger('Sync failed', error));
+    // Runs synchronously and returns once the data is persisted, so errors
+    // (e.g. an upstream rate limit) surface to the caller as a normal response.
+    const startedAt = Date.now();
+    const { peopleUpserted } = await this.service.run(parsedJurisdiction);
 
-    res.status(202).json({ message: 'Sync started', jurisdiction: parsedJurisdiction });
+    res.status(200).json({
+      jurisdiction: parsedJurisdiction,
+      peopleUpserted,
+      durationMs: Date.now() - startedAt,
+    });
   }
 }

@@ -137,29 +137,32 @@ describe('POST /api/sync', () => {
     expect(syncService.run).not.toHaveBeenCalled();
   });
 
-  it('accepts the request and starts the sync in the background', async () => {
+  it('runs the sync synchronously and returns the persisted counts', async () => {
     const { app, syncService } = makeApp();
 
     const response = await request(app).post('/api/sync?jurisdiction=Georgia');
 
-    expect(response.status).toBe(202);
-    expect(response.body).toEqual({
-      message: 'Sync started',
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
       jurisdiction: 'ocd-jurisdiction/country:us/state:ga/government',
+      peopleUpserted: 0,
     });
+    expect(typeof response.body.durationMs).toBe('number');
     expect(syncService.run).toHaveBeenCalledWith(
       'ocd-jurisdiction/country:us/state:ga/government',
     );
+    expect(syncService.run).toHaveBeenCalledTimes(1);
   });
 
-  it('still returns 202 when the background sync fails', async () => {
+  it('propagates upstream failures while the sync runs', async () => {
     const { app } = makeApp({
       sync: { run: vi.fn(async () => Promise.reject(new Error('upstream down'))) },
     });
 
     const response = await request(app).post('/api/sync?jurisdiction=Georgia');
 
-    expect(response.status).toBe(202);
+    expect(response.status).toBe(500);
+    expect(response.body.error.code).toBe('INTERNAL_ERROR');
   });
 });
 
