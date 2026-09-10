@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { logger } from '../../shared/utils/logger.js';
 import type { SyncService } from './sync.service.js';
+import { resolveJurisdiction } from '../../shared/utils/resolveJurisdiction.js';
 
 export class SyncScheduler {
   private task?: cron.ScheduledTask;
@@ -18,6 +19,13 @@ export class SyncScheduler {
       return;
     }
 
+    const parsedJurisdiction = resolveJurisdiction(this.jurisdiction);
+
+    if (!parsedJurisdiction) {
+      logger(`Invalid SYNC_JURISDICTION: "${this.jurisdiction}". Use a 2-letter state code, full name, or OCD id.`);
+      return;
+    }
+
     if (!cron.validate(this.cronExpression)) {
       logger(`Invalid sync cron expression: "${this.cronExpression}"`);
       return;
@@ -30,16 +38,16 @@ export class SyncScheduler {
       }
 
       this.isRunning = true;
-      logger(`Running scheduled sync for "${this.jurisdiction}"`);
+      logger(`Running scheduled sync for "${parsedJurisdiction}"`);
       this.service
-        .run(this.jurisdiction)
+        .run(parsedJurisdiction)
         .catch((error) => logger('Scheduled sync failed', error))
         .finally(() => {
           this.isRunning = false;
         });
     });
 
-    logger(`Scheduled sync for "${this.jurisdiction}" with cron "${this.cronExpression}"`);
+    logger(`Scheduled sync for "${parsedJurisdiction}" with cron "${this.cronExpression}"`);
   }
 
   stop(): void {

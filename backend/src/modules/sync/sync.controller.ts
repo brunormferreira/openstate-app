@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { SyncService } from './sync.service.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import { logger } from '../../shared/utils/logger.js';
+import { resolveJurisdiction } from '../../shared/utils/resolveJurisdiction.js';
 
 const MAX_JURISDICTION_LENGTH = 200;
 
@@ -21,13 +22,22 @@ export class SyncController {
     }
 
     const { jurisdiction } = parsed.data;
+    const parsedJurisdiction = resolveJurisdiction(jurisdiction);
+
+    if (!parsedJurisdiction) {
+      throw new AppError(
+        'Invalid jurisdiction. Use a 2-letter state code (e.g. ga), full name (e.g. california), or OCD id (e.g. ocd-jurisdiction/country:us/state:ga/government)',
+        400,
+        'BAD_REQUEST',
+      );
+    }
 
     // Run in the background so the client responds immediately.
     this.service
-      .run(jurisdiction)
+      .run(parsedJurisdiction)
       .then((result) => logger('Sync finished', JSON.stringify(result)))
       .catch((error) => logger('Sync failed', error));
 
-    res.status(202).json({ message: 'Sync started', jurisdiction });
+    res.status(202).json({ message: 'Sync started', jurisdiction: parsedJurisdiction });
   }
 }
