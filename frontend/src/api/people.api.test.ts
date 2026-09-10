@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { fetchPeople, fetchPeopleFilters } from './people.service';
+import { fetchPeople, fetchPeopleFilters } from './people.api';
 
 const mockFetch = vi.fn();
 

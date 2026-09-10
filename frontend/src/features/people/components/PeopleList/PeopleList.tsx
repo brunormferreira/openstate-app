@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { usePeople, usePeopleFilters } from '@/features/people/hooks/usePeople';
-import { usePeopleFilter } from '@/context/usePeopleFilter';
+import { usePeopleFilter } from '@/context/PeopleFilterContext';
 import { PeopleFilters } from '@/features/people/components/PeopleFilters/PeopleFilters';
 import { SyncPanel } from '@/features/people/components/SyncPanel/SyncPanel';
 import { PeopleListContent } from './PeopleListContent';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { apiErrorMessage } from './apiErrorMessage';
-import { ApiError } from '@/services/api';
+import { ApiError } from '@/api/client';
 
 describe('apiErrorMessage', () => {
   it('returns error.message when present', () => {

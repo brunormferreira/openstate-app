@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   peopleFiltersReducer,
   initialPeopleFilters,
-} from './people.filter.reducer';
+} from './peopleFilterReducer';
 
 describe('peopleFiltersReducer', () => {
   it('returns the initial state by default', () => {

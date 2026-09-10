@@ -1,4 +1,4 @@
-import { ApiError } from '@/services/api';
+import { ApiError } from '@/api/client';
 
 const TRANSPORT_MESSAGES: Record<string, string> = {
   TIMEOUT: 'The server took too long to respond. Please try again.',

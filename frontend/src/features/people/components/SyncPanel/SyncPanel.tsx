@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { runSync } from '@/services/sync.service';
+import { runSync } from '@/api/people.api';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
 import { useToast } from '@/components/Toast';
 

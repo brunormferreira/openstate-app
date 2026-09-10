@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { Pagination } from '@/components/Pagination/Pagination';
-import { EmptyState } from '@/components/EmptyState';
-import { ErrorState } from '@/components/ErrorState';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
+import { ErrorState } from '@/components/ErrorState/ErrorState';
 import { Spinner } from '@/components/Spinner';
 import { PersonCard } from '@/features/people/components/PersonCard/PersonCard';
-import type { PeopleListResponse } from '@/models/people';
+import type { PeopleListResponse } from '@/api/types';
 import { apiErrorMessage } from '@/utils/apiErrorMessage';
 
 const Grid = styled.div`

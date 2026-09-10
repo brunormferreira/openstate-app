@@ -1,5 +1,5 @@
-import type { PeopleFiltersResponse, PeopleListResponse, PeopleQuery } from '@/models/people';
-import { request } from './api';
+import type { PeopleFiltersResponse, PeopleListResponse, PeopleQuery } from './types';
+import { request } from './client';
 
 export function fetchPeople(
   params: PeopleQuery,
@@ -18,4 +18,10 @@ export function fetchPeople(
 
 export function fetchPeopleFilters(signal?: AbortSignal): Promise<PeopleFiltersResponse> {
   return request<PeopleFiltersResponse>('/people/filters', { signal });
+}
+
+export function runSync(jurisdiction: string): Promise<void> {
+  return request<void>(`/sync?jurisdiction=${encodeURIComponent(jurisdiction)}`, {
+    method: 'POST',
+  });
 }

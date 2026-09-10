@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { PeopleList } from '@/features/people/components/PeopleList/PeopleList';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
+
 const Page = styled.div`
   min-height: 100vh;
   background-image: ${({ theme }) => theme.colors.bgAccent};

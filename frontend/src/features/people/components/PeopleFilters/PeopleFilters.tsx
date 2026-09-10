@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { usePeopleFilter } from '@/context/usePeopleFilter';
+import { usePeopleFilter } from '@/context/PeopleFilterContext';
 
 const Bar = styled.div`
   display: flex;

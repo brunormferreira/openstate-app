@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import type { Person } from '@/models/people';
+import type { Person } from '@/api/types';
 import { partyColor } from '@/styles/theme';
 
 const Card = styled.article<{ $accent: string }>`

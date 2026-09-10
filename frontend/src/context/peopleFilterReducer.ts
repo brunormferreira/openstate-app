@@ -1,6 +1,4 @@
-import type { PeopleFiltersState, PeopleFilterAction } from '@/models/filter';
-
-export type { PeopleFiltersState, PeopleFilterAction };
+import type { PeopleFiltersState, PeopleFilterAction } from './PeopleFilterContext';
 
 export const initialPeopleFilters: PeopleFiltersState = {
   state: '',

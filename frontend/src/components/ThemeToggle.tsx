@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useThemeMode } from '@/context/useThemeMode';
+import { useThemeMode } from '@/context/ThemeContext';
 
 const Toggle = styled.button`
   display: inline-flex;
