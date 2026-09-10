@@ -71,12 +71,6 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 Use the preset buttons on the frontend, or call the API directly:
 
 ```bash
-curl -X POST "http://localhost:3000/api/sync?jurisdiction=ga"
-```
-
-You can also use the full ID:
-
-```bash
 curl -X POST "http://localhost:3000/api/sync?jurisdiction=ocd-jurisdiction/country:us/state:ga/government"
 ```
 
@@ -85,7 +79,7 @@ curl -X POST "http://localhost:3000/api/sync?jurisdiction=ocd-jurisdiction/count
 Set `SYNC_JURISDICTION` in `.env` to enable automatic daily sync:
 
 ```
-SYNC_JURISDICTION=ga
+SYNC_JURISDICTION=ocd-jurisdiction/country:us/state:ga/government
 SYNC_CRON=0 0 * * *
 ```
 
