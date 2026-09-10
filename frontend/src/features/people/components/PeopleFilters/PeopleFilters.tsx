@@ -57,6 +57,7 @@ const ClearButton = styled.button`
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.primarySoft};
   color: ${({ theme }) => theme.colors.primarySoftText};
+  margin-bottom: 2px;
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
