@@ -11,8 +11,9 @@ export interface OpenStatesClient {
 const PER_PAGE = 50;
 /** Safety cap so a single sync never walks an unbounded number of pages. */
 const MAX_PAGE = 50;
-const MAX_RETRIES = 3;
-const RATE_LIMIT_BACKOFF_MS = 60_000;
+/** Short retry window: the quota is daily, so a 429 means fail fast, not back off for minutes. */
+const MAX_RETRIES = 2;
+const RATE_LIMIT_BACKOFF_MS = 5_000;
 
 export class HttpOpenStatesClient implements OpenStatesClient {
   constructor(

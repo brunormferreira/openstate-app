@@ -69,7 +69,7 @@ describe('HttpOpenStatesClient', () => {
     await vi.runAllTimersAsync();
     await assertion;
 
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('stops requesting once the page cap is exceeded', async () => {
