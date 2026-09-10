@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import type { PeopleService } from './people.service.js';
+import { AppError } from '../../shared/errors/AppError.js';
 
 const MIN_PAGE = 1;
 const DEFAULT_PAGE = 1;
@@ -37,9 +38,17 @@ export class PeopleController {
   constructor(private readonly service: PeopleService) {}
 
   async list(req: Request, res: Response): Promise<void> {
-    const query = listQuerySchema.parse(req.query);
+    const parsed = listQuerySchema.safeParse(req.query);
 
-    const result = await this.service.list(query);
+    if (!parsed.success) {
+      throw new AppError(
+        `Invalid query parameters: ${parsed.error.issues.map((i) => i.message).join(', ')}`,
+        400,
+        'BAD_REQUEST',
+      );
+    }
+
+    const result = await this.service.list(parsed.data);
     res.json(result);
   }
 

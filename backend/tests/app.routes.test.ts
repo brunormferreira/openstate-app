@@ -143,8 +143,13 @@ describe('POST /api/sync', () => {
     const response = await request(app).post('/api/sync?jurisdiction=Georgia');
 
     expect(response.status).toBe(202);
-    expect(response.body).toEqual({ message: 'Sync started', jurisdiction: 'Georgia' });
-    expect(syncService.run).toHaveBeenCalledWith('Georgia');
+    expect(response.body).toEqual({
+      message: 'Sync started',
+      jurisdiction: 'ocd-jurisdiction/country:us/state:ga/government',
+    });
+    expect(syncService.run).toHaveBeenCalledWith(
+      'ocd-jurisdiction/country:us/state:ga/government',
+    );
   });
 
   it('still returns 202 when the background sync fails', async () => {
