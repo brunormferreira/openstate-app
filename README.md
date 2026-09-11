@@ -47,11 +47,11 @@ docker compose up -d --build
 
 This builds and starts three containers:
 
-| Service  | Port | Description                      |
-|----------|------|----------------------------------|
-| frontend | 8080 | React app served via nginx       |
-| backend  | 3000 | Express API                     |
-| db       | 5432 | PostgreSQL                       |
+| Service  | Port | Description                |
+| -------- | ---- | -------------------------- |
+| frontend | 8080 | React app served via nginx |
+| backend  | 3000 | Express API                |
+| db       | 5432 | PostgreSQL                 |
 
 ### 4. Access the application
 
@@ -59,12 +59,12 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## API Endpoints
 
-| Method | Endpoint              | Description                          |
-|--------|-----------------------|--------------------------------------|
-| GET    | `/health`             | Health check                         |
-| GET    | `/api/people`         | List people (supports `?page`, `perPage`, `?state`, `?party`) |
-| GET    | `/api/people/filters` | Distinct states and parties           |
-| POST   | `/api/sync?jurisdiction=X` | Sync a jurisdiction from OpenStates |
+| Method | Endpoint                   | Description                                                   |
+| ------ | -------------------------- | ------------------------------------------------------------- |
+| GET    | `/health`                  | Health check                                                  |
+| GET    | `/api/people`              | List people (supports `?page`, `perPage`, `?state`, `?party`) |
+| GET    | `/api/people/filters`      | Distinct states and parties                                   |
+| POST   | `/api/sync?jurisdiction=X` | Sync a jurisdiction from OpenStates                           |
 
 ### Sync a jurisdiction
 
@@ -88,19 +88,8 @@ Leave `SYNC_JURISDICTION` empty to disable.
 ## Testing
 
 - **Backend** — tests in `backend/tests/` using [Vitest](https://vitest.dev/) + [Supertest](https://github.com/ladakh/supertest):
-  - `app.routes.test.ts` — route integration tests
-  - `openStatesClient.test.ts` — external API client
-  - `people.service.test.ts`, `people.controller.test.ts`, `people.repository.test.ts` — people module
-  - `sync.mapper.test.ts`, `sync.repository.test.ts`, `sync.service.test.ts`, `sync.scheduler.test.ts` — sync module
-  - `resolveJurisdiction.test.ts` — jurisdiction resolver
 
 - **Frontend** — tests next to sources (`*.test.tsx`) using [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/):
-  - `api/` — HTTP client and API layer
-  - `context/` — PeopleFilterContext, SyncContext, ThemeContext, reducer logic
-  - `components/` — ConfirmDialog, EmptyState, ErrorBoundary, ErrorState, Footer, FullScreenLoader, Pagination, Spinner, ThemeToggle
-  - `features/people/` — PeopleFilters, PeopleListContent, PersonCard, SyncPanel
-  - `utils/` — apiErrorMessage, syncHistory
-  - `styles/` — theme
 
 ```bash
 # Run all tests
@@ -118,10 +107,10 @@ cd frontend && npm run test:coverage
 
 ### Coverage
 
-|         | Stmts  | Branch | Funcs  | Lines  |
-|---------|--------|--------|--------|--------|
-| Backend | 94.32% | 96.66% | 100%   | 94.32% |
-| Frontend| 96.87% | 89.32% | 97.65% | 96.91% |
+|          | Stmts  | Branch | Funcs  | Lines  |
+| -------- | ------ | ------ | ------ | ------ |
+| Backend  | 94.32% | 96.66% | 100%   | 94.32% |
+| Frontend | 96.87% | 89.32% | 97.65% | 96.91% |
 
 ## Local Development (without Docker)
 
