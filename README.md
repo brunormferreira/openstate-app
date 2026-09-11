@@ -110,7 +110,7 @@ cd frontend && npm run test:coverage
 |          | Stmts  | Branch | Funcs  | Lines  |
 | -------- | ------ | ------ | ------ | ------ |
 | Backend  | 94.32% | 96.66% | 100%   | 94.32% |
-| Frontend | 96.87% | 89.32% | 97.65% | 96.91% |
+| Frontend | 96.90% | 89.04% | 97.66% | 96.94% |
 
 ## Local Development (without Docker)
 
