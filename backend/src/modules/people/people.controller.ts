@@ -4,6 +4,7 @@ import type { PeopleService } from './people.service.js';
 import { AppError } from '../../shared/errors/AppError.js';
 
 const MIN_PAGE = 1;
+const MAX_PAGE = 100_000;
 const DEFAULT_PAGE = 1;
 const MIN_PER_PAGE = 1;
 const DEFAULT_PER_PAGE = 20;
@@ -26,7 +27,7 @@ const listQuerySchema = z.object({
     .number()
     .int()
     .catch(DEFAULT_PAGE)
-    .transform((value) => Math.max(MIN_PAGE, value)),
+    .transform((value) => Math.min(MAX_PAGE, Math.max(MIN_PAGE, value))),
   perPage: z.coerce
     .number()
     .int()

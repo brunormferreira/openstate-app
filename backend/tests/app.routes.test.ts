@@ -76,6 +76,14 @@ describe('GET /api/people', () => {
     expect(peopleService.list).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }));
   });
 
+  it('caps page at the maximum allowed value', async () => {
+    const { app, peopleService } = makeApp();
+
+    await request(app).get('/api/people?page=999999999999');
+
+    expect(peopleService.list).toHaveBeenCalledWith(expect.objectContaining({ page: 100_000 }));
+  });
+
   it('falls back to defaults when pagination params are not numeric', async () => {
     const { app, peopleService } = makeApp();
 
