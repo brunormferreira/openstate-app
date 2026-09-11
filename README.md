@@ -87,16 +87,18 @@ Leave `SYNC_JURISDICTION` empty to disable.
 
 ## Testing
 
-- **Backend** — tests live in `backend/tests/` and use [Vitest](https://vitest.dev/) + [Supertest](https://github.com/ladakh/supertest):
+- **Backend** — tests in `backend/tests/` using [Vitest](https://vitest.dev/) + [Supertest](https://github.com/ladakh/supertest):
   - `app.routes.test.ts` — route integration tests
   - `openStatesClient.test.ts` — external API client
-  - `people.service.test.ts` — business logic
-  - `sync.mapper.test.ts`, `sync.repository.test.ts`, `sync.service.test.ts` — sync module
+  - `people.service.test.ts`, `people.controller.test.ts`, `people.repository.test.ts` — people module
+  - `sync.mapper.test.ts`, `sync.repository.test.ts`, `sync.service.test.ts`, `sync.scheduler.test.ts` — sync module
+  - `resolveJurisdiction.test.ts` — jurisdiction resolver
 
-- **Frontend** — tests live next to their sources (`*.test.tsx`) and use [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/):
+- **Frontend** — tests next to sources (`*.test.tsx`) using [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/):
   - `api/` — HTTP client and API layer
-  - `context/` — reducer logic
-  - `components/` — EmptyState, ErrorState, Pagination
+  - `context/` — PeopleFilterContext, SyncContext, ThemeContext, reducer logic
+  - `components/` — ConfirmDialog, EmptyState, ErrorBoundary, ErrorState, Footer, FullScreenLoader, Pagination, Spinner, ThemeToggle
+  - `features/people/` — PeopleFilters, PeopleListContent, PersonCard, SyncPanel
   - `utils/` — apiErrorMessage, syncHistory
   - `styles/` — theme
 
@@ -108,7 +110,18 @@ cd frontend && npm test
 # Watch mode
 cd backend && npm run test:watch
 cd frontend && npm run test:watch
+
+# Coverage (generates HTML report in coverage/)
+cd backend && npm run test:coverage
+cd frontend && npm run test:coverage
 ```
+
+### Coverage
+
+|         | Stmts  | Branch | Funcs  | Lines  |
+|---------|--------|--------|--------|--------|
+| Backend | 94.32% | 96.66% | 100%   | 94.32% |
+| Frontend| 96.87% | 89.32% | 97.65% | 96.91% |
 
 ## Local Development (without Docker)
 
