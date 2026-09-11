@@ -1,0 +1,9 @@
+services:
+  adminer:
+    image: adminer:latest
+    container_name: openstates_adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - '8081:8080'
