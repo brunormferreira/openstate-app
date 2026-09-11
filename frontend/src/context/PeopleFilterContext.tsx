@@ -6,12 +6,14 @@ export interface PeopleFiltersState {
   state: string;
   party: string;
   page: number;
+  perPage: number;
 }
 
 export type PeopleFilterAction =
   | { type: 'SET_STATE'; value: string }
   | { type: 'SET_PARTY'; value: string }
   | { type: 'SET_PAGE'; value: number }
+  | { type: 'SET_PER_PAGE'; value: number }
   | { type: 'CLEAR' };
 
 export interface PeopleFilterContextValue {
@@ -19,6 +21,7 @@ export interface PeopleFilterContextValue {
   setStateFilter: (state: string) => void;
   setPartyFilter: (party: string) => void;
   setPage: (page: number) => void;
+  setPerPage: (perPage: number) => void;
   clearFilters: () => void;
 }
 
@@ -33,6 +36,7 @@ export function PeopleFilterProvider({ children }: { readonly children: ReactNod
       setStateFilter: (value) => dispatch({ type: 'SET_STATE', value }),
       setPartyFilter: (value) => dispatch({ type: 'SET_PARTY', value }),
       setPage: (value) => dispatch({ type: 'SET_PAGE', value }),
+      setPerPage: (value) => dispatch({ type: 'SET_PER_PAGE', value }),
       clearFilters: () => dispatch({ type: 'CLEAR' }),
     }),
     [state],

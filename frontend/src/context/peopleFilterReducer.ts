@@ -4,6 +4,7 @@ export const initialPeopleFilters: PeopleFiltersState = {
   state: '',
   party: '',
   page: 1,
+  perPage: 20,
 };
 
 export function peopleFiltersReducer(
@@ -18,6 +19,9 @@ export function peopleFiltersReducer(
       return { ...state, party: action.value, page: 1 };
     case 'SET_PAGE':
       return { ...state, page: action.value };
+    // Changing the page size invalidates the current page.
+    case 'SET_PER_PAGE':
+      return { ...state, perPage: action.value, page: 1 };
     case 'CLEAR':
       return initialPeopleFilters;
     default:

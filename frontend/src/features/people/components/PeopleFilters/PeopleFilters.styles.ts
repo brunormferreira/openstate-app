@@ -25,7 +25,7 @@ export const Label = styled.label`
 
 export const Select = styled.select`
   width: 100%;
-  padding: ${({ theme }) => `${theme.space(2)} ${theme.space(3)}`};
+  padding: ${({ theme }) => `${theme.space(2)} 24px ${theme.space(2)} ${theme.space(3)}`};
   border: 1px solid ${({ theme }) => theme.colors.borderStrong};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
@@ -33,6 +33,10 @@ export const Select = styled.select`
   font-weight: 500;
   color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 8l3-3.5H3z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
 
   @media (min-width: 768px) {
     width: auto;

@@ -6,10 +6,8 @@ import { SyncPanel } from '@/features/people/components/SyncPanel/SyncPanel';
 import { PeopleListContent } from './PeopleListContent';
 import { Sections, Toolbar, SectionTitle, Count } from './PeopleList.styles';
 
-const PER_PAGE = 20;
-
 export function PeopleList() {
-  const { state, setPage } = usePeopleFilter();
+  const { state, setPage, setPerPage } = usePeopleFilter();
   const { isSyncing } = useSync();
   const filtersQuery = usePeopleFilters();
 
@@ -17,7 +15,7 @@ export function PeopleList() {
     state: state.state || undefined,
     party: state.party || undefined,
     page: state.page,
-    perPage: PER_PAGE,
+    perPage: state.perPage,
   });
 
   const isInitialLoading = peopleQuery.isLoading;
@@ -25,6 +23,11 @@ export function PeopleList() {
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePerPageChange = (nextPerPage: number) => {
+    setPerPage(nextPerPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -52,6 +55,7 @@ export function PeopleList() {
         hasActiveFilters={Boolean(state.state || state.party)}
         onRetry={() => void peopleQuery.refetch()}
         onPageChange={handlePageChange}
+        onPerPageChange={handlePerPageChange}
       />
     </Sections>
   );

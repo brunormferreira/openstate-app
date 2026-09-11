@@ -17,6 +17,7 @@ interface PeopleListContentProps {
   readonly hasActiveFilters: boolean;
   readonly onRetry: () => void;
   readonly onPageChange: (page: number) => void;
+  readonly onPerPageChange: (perPage: number) => void;
 }
 
 export function PeopleListContent({
@@ -28,6 +29,7 @@ export function PeopleListContent({
   hasActiveFilters,
   onRetry,
   onPageChange,
+  onPerPageChange,
 }: PeopleListContentProps) {
   const loading = isInitialLoading || isRefreshing || isSyncing;
 
@@ -60,7 +62,13 @@ export function PeopleListContent({
             <PersonCard key={person.id} person={person} />
           ))}
         </Grid>
-        <Pagination page={data.page} totalPages={data.totalPages} onPageChange={onPageChange} />
+        <Pagination
+          page={data.page}
+          totalItems={data.total}
+          perPage={data.perPage}
+          onPageChange={onPageChange}
+          onPerPageChange={onPerPageChange}
+        />
       </>
     );
   }
