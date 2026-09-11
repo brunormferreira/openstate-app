@@ -159,6 +159,10 @@ docker compose down -v
 docker compose logs -f backend
 docker compose logs -f frontend
 
+# Browse the database in the browser (Adminer at http://localhost:8081)
+docker compose -f docker-compose.yml -f docker-compose.adminer.yml up -d adminer
+# Login: server=db, user=openstates, password=openstates, database=openstates
+
 # Type check
 cd backend && npm run typecheck
 cd frontend && npm run typecheck
