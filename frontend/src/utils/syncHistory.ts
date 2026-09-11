@@ -22,6 +22,10 @@ export function recordSync(jurisdiction: string, peopleCount: number): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
 
+export function clearSyncHistory(): void {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
 export function formatRelativeTime(timestamp: number): string {
   const diff = Date.now() - timestamp;
   const minutes = Math.floor(diff / 60_000);

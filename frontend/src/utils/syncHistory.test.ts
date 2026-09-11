@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getLastSync, recordSync, formatRelativeTime } from './syncHistory';
+import {
+  getLastSync,
+  recordSync,
+  clearSyncHistory,
+  formatRelativeTime,
+} from './syncHistory';
 
 describe('syncHistory', () => {
   beforeEach(() => {
@@ -34,6 +39,19 @@ describe('syncHistory', () => {
       recordSync('GA', 20);
       const result = getLastSync('GA');
       expect(result!.peopleCount).toBe(20);
+    });
+  });
+
+  describe('clearSyncHistory', () => {
+    it('removes stored sync records', () => {
+      recordSync('GA', 10);
+      clearSyncHistory();
+      expect(getLastSync('GA')).toBeNull();
+    });
+
+    it('is a no-op when nothing is stored', () => {
+      clearSyncHistory();
+      expect(localStorage.getItem('openstates:sync-history')).toBeNull();
     });
   });
 

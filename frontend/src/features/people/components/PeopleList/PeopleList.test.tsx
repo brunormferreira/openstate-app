@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
 import { PeopleFilterProvider } from '@/context/PeopleFilterContext';
 import { SyncProvider } from '@/context/SyncContext';
+import { recordSync, getLastSync } from '@/utils/syncHistory';
 import { PeopleList } from './PeopleList';
 
 vi.mock('@/features/people/hooks/usePeople', () => ({
@@ -55,6 +56,13 @@ function renderPeopleList() {
 describe('PeopleList', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+  });
+
+  it('clears stale sync history when the database is empty', () => {
+    recordSync('GA', 10);
+    renderPeopleList();
+    expect(getLastSync('GA')).toBeNull();
   });
 
   it('renders the section title', () => {

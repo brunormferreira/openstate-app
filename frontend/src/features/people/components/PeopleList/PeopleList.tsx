@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { usePeople, usePeopleFilters } from '@/features/people/hooks/usePeople';
 import { usePeopleFilter } from '@/context/PeopleFilterContext';
 import { useSync } from '@/context/SyncContext';
+import { clearSyncHistory } from '@/utils/syncHistory';
 import { PeopleFilters } from '@/features/people/components/PeopleFilters/PeopleFilters';
 import { SyncPanel } from '@/features/people/components/SyncPanel/SyncPanel';
 import { PeopleListContent } from './PeopleListContent';
@@ -17,6 +19,14 @@ export function PeopleList() {
     page: state.page,
     perPage: state.perPage,
   });
+
+  const hasActiveFilters = Boolean(state.state || state.party);
+
+  useEffect(() => {
+    if (!hasActiveFilters && peopleQuery.data?.total === 0) {
+      clearSyncHistory();
+    }
+  }, [hasActiveFilters, peopleQuery.data?.total]);
 
   const isInitialLoading = peopleQuery.isLoading;
   const isRefreshing = peopleQuery.isFetching && !peopleQuery.isLoading;
@@ -52,7 +62,7 @@ export function PeopleList() {
         isSyncing={isSyncing}
         error={peopleQuery.error}
         data={peopleQuery.data}
-        hasActiveFilters={Boolean(state.state || state.party)}
+        hasActiveFilters={hasActiveFilters}
         onRetry={() => void peopleQuery.refetch()}
         onPageChange={handlePageChange}
         onPerPageChange={handlePerPageChange}
