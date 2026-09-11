@@ -85,7 +85,63 @@ SYNC_CRON=0 0 * * *
 
 Leave `SYNC_JURISDICTION` empty to disable.
 
+## Testing
+
+- **Backend** — tests live in `backend/tests/` and use [Vitest](https://vitest.dev/) + [Supertest](https://github.com/ladakh/supertest):
+  - `app.routes.test.ts` — route integration tests
+  - `openStatesClient.test.ts` — external API client
+  - `people.service.test.ts` — business logic
+  - `sync.mapper.test.ts`, `sync.repository.test.ts`, `sync.service.test.ts` — sync module
+
+- **Frontend** — tests live next to their sources (`*.test.tsx`) and use [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/):
+  - `api/` — HTTP client and API layer
+  - `context/` — reducer logic
+  - `components/` — EmptyState, ErrorState, Pagination
+  - `utils/` — apiErrorMessage, syncHistory
+  - `styles/` — theme
+
+```bash
+# Run all tests
+cd backend && npm test
+cd frontend && npm test
+
+# Watch mode
+cd backend && npm run test:watch
+cd frontend && npm run test:watch
+```
+
+## Local Development (without Docker)
+
+<details>
+<summary>Click to expand</summary>
+
+Prerequisites: Node.js 20+, PostgreSQL running locally.
+
+```bash
+# 1. Start the database (or use an existing PostgreSQL instance)
+# Make sure the credentials match DATABASE_URL in .env
+
+# 2. Install and run the backend
+cd backend
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run dev        # starts on :3000 with hot-reload (tsx watch)
+
+# 3. Install and run the frontend (in another terminal)
+cd frontend
+npm install
+npm run dev        # starts on :5173 with Vite HMR
+```
+
+The frontend dev server proxies `/api` requests to `http://localhost:3000` via `VITE_API_URL`.
+
+</details>
+
 ## Useful Commands
+
+<details>
+<summary>Click to expand</summary>
 
 ```bash
 # Start (build if needed)
@@ -101,13 +157,6 @@ docker compose down -v
 docker compose logs -f backend
 docker compose logs -f frontend
 
-# Run backend tests (from backend/ directory)
-cd backend && npm test
-
-# Run frontend tests (from frontend/ directory)
-cd frontend && npm test
-cd frontend && npm run test:watch   # watch mode
-
 # Type check
 cd backend && npm run typecheck
 cd frontend && npm run typecheck
@@ -121,15 +170,23 @@ cd backend && npm run format
 cd frontend && npm run format
 ```
 
+</details>
+
 ## Project Structure
+
+<details>
+<summary>Click to expand</summary>
 
 ```
 openstates/
 ├── docker-compose.yml
-├── .env                  # Environment variables (gitignored)
-├── .env.example          # Template for environment variables
+├── .env                    # Environment variables (gitignored)
+├── .env.example            # Template for environment variables
+├── .prettierrc.json        # Prettier config
+├── README.md
 ├── backend/
 │   ├── Dockerfile
+│   ├── .dockerignore
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── eslint.config.js
@@ -137,32 +194,100 @@ openstates/
 │   │   ├── schema.prisma
 │   │   └── migrations/
 │   ├── src/
-│   │   ├── server.ts     # Bootstrap
-│   │   ├── app.ts        # Express composition
-│   │   ├── config/       # Environment config
-│   │   ├── infra/        # Prisma client + OpenStates HTTP client
-│   │   ├── models/       # Type definitions (person, sync)
+│   │   ├── server.ts       # Bootstrap
+│   │   ├── app.ts          # Express composition
+│   │   ├── config/
+│   │   │   └── env.ts      # Environment config
+│   │   ├── infra/
+│   │   │   ├── database/
+│   │   │   │   └── prisma.ts
+│   │   │   └── openstates/
+│   │   │       ├── openStatesClient.ts
+│   │   │       └── openStates.types.ts
+│   │   ├── models/
+│   │   │   ├── people.ts
+│   │   │   └── sync.ts
 │   │   ├── modules/
-│   │   │   ├── people/   # GET /api/people, /api/people/filters
-│   │   │   └── sync/     # POST /api/sync, scheduler
-│   │   └── shared/       # Middlewares, errors, utils (logger, sleep)
-│   └── tests/            # Unit + integration tests (vitest)
+│   │   │   ├── people/
+│   │   │   │   ├── people.controller.ts
+│   │   │   │   ├── people.repository.ts
+│   │   │   │   ├── people.routes.ts
+│   │   │   │   └── people.service.ts
+│   │   │   └── sync/
+│   │   │       ├── sync.controller.ts
+│   │   │       ├── sync.mapper.ts
+│   │   │       ├── sync.repository.ts
+│   │   │       ├── sync.routes.ts
+│   │   │       ├── sync.scheduler.ts
+│   │   │       └── sync.service.ts
+│   │   └── shared/
+│   │       ├── errors/
+│   │       │   └── AppError.ts
+│   │       ├── middlewares/
+│   │       │   └── errorHandler.ts
+│   │       └── utils/
+│   │           ├── logger.ts
+│   │           ├── resolveJurisdiction.ts
+│   │           └── sleep.ts
+│   └── tests/
+│       ├── app.routes.test.ts
+│       ├── openStatesClient.test.ts
+│       ├── people.service.test.ts
+│       ├── sync.mapper.test.ts
+│       ├── sync.repository.test.ts
+│       └── sync.service.test.ts
 └── frontend/
     ├── Dockerfile
-    ├── nginx.conf        # SPA routing + /api proxy to backend
+    ├── .dockerignore
+    ├── nginx.conf          # SPA routing + /api proxy to backend
+    ├── index.html
     ├── package.json
     ├── tsconfig.json
     ├── vite.config.ts
+    ├── eslint.config.js
     └── src/
-        ├── main.tsx      # Providers (QueryClient, Theme, Filters)
-        ├── App.tsx        # Page shell + header
-        ├── models/        # Type definitions (person, filter)
-        ├── components/    # Shared UI (Spinner, EmptyState, ErrorState, Pagination, ThemeToggle)
-        ├── context/       # React context (filter + theme reducers)
+        ├── main.tsx        # Providers (QueryClient, Theme, Filters)
+        ├── App.tsx         # Page shell + header
+        ├── vite-env.d.ts
+        ├── test-setup.ts
+        ├── api/
+        │   ├── client.ts   # API HTTP client
+        │   ├── people.api.ts
+        │   └── types.ts
+        ├── components/
+        │   ├── ConfirmDialog/
+        │   ├── EmptyState/
+        │   ├── ErrorBoundary/
+        │   ├── ErrorState/
+        │   ├── Footer/
+        │   ├── FullScreenLoader/
+        │   ├── Pagination/
+        │   ├── Spinner/
+        │   └── ThemeToggle/
+        │       ├── ComponentName.tsx
+        │       └── ComponentName.styles.ts
+        ├── context/
+        │   ├── PeopleFilterContext.tsx
+        │   ├── SyncContext.tsx
+        │   ├── ThemeContext.tsx
+        │   └── peopleFilterReducer.ts
         ├── features/
-        │   └── people/    # PeopleList, PeopleFilters, PersonCard, SyncPanel, usePeople hook
-        ├── services/      # API client layer (fetch wrapper, people, sync)
-        ├── styles/        # Global styles, theme (light/dark), styled-components types
-        └── utils/         # Helpers (apiErrorMessage)
-        # Unit tests (vitest) live in *.test.ts(x) alongside their sources
+        │   └── people/
+        │       ├── hooks/
+        │       │   └── usePeople.ts
+        │       └── components/
+        │           ├── PeopleFilters/
+        │           ├── PeopleList/
+        │           ├── PersonCard/
+        │           └── SyncPanel/
+        ├── styles/
+        │   ├── global.ts
+        │   ├── styled.d.ts
+        │   └── theme.ts
+        └── utils/
+            ├── apiErrorMessage.ts
+            └── syncHistory.ts
+        # Unit tests (*.test.tsx) live alongside their sources
 ```
+
+</details>

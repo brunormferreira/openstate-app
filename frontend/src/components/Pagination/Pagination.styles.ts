@@ -6,7 +6,7 @@ export const Bar = styled.nav`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.space(4)};
-  margin-top: ${({ theme }) => theme.space(8)};
+  margin-top: ${({ theme }) => theme.space(4)};
   font-size: 13px;
   color: ${({ theme }) => theme.colors.textSubtle};
 `;
@@ -54,13 +54,13 @@ export const Info = styled.span`
 export const ArrowButton = styled.button`
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.sm};
   background: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.textMuted};
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   transition: ${({ theme }) => `background ${theme.transition}, border-color ${theme.transition}`};
 
