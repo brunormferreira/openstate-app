@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- Build stage ----
-FROM node:20-slim AS build
+FROM node:22-slim AS build
 WORKDIR /app
 
 # Prisma engines require OpenSSL at runtime
@@ -18,7 +18,7 @@ COPY src ./src
 RUN npm run build
 
 # ---- Production stage ----
-FROM node:20-slim AS production
+FROM node:22-slim AS production
 WORKDIR /app
 ENV NODE_ENV=production
 
