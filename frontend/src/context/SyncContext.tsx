@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
-export interface SyncContextValue {
+interface SyncContextValue {
   isSyncing: boolean;
   setSyncing: (value: boolean) => void;
 }

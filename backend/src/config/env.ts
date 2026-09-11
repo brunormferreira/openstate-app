@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-export interface Env {
+interface Env {
   port: number;
   openStatesApiUrl: string;
   openStatesApiToken: string;
@@ -25,7 +25,7 @@ function number(name: string, fallback: number): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-export function loadEnv(): Env {
+function loadEnv(): Env {
   return {
     port: number('PORT', 3000),
     openStatesApiUrl: process.env.OPENSTATES_API_URL ?? 'https://v3.openstates.org',

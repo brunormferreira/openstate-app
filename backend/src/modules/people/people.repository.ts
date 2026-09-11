@@ -1,18 +1,6 @@
-import type { Person, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '../../infra/database/prisma.js';
-
-export interface PeopleListResult {
-  items: Person[];
-  total: number;
-  page: number;
-  perPage: number;
-  totalPages: number;
-}
-
-export interface PeopleFiltersResult {
-  states: string[];
-  parties: string[];
-}
+import type { PeopleListResponse, PeopleFiltersResponse } from '../../models/people.js';
 
 export interface PeopleRepository {
   list(params: {
@@ -20,11 +8,11 @@ export interface PeopleRepository {
     party?: string;
     page?: number;
     perPage?: number;
-  }): Promise<PeopleListResult>;
-  listFilters(): Promise<PeopleFiltersResult>;
+  }): Promise<PeopleListResponse>;
+  listFilters(): Promise<PeopleFiltersResponse>;
 }
 
-export class PrismaPeopleRepository implements PeopleRepository {
+class PrismaPeopleRepository implements PeopleRepository {
   private buildWhere(params: { state?: string; party?: string }): Prisma.PersonWhereInput {
     const where: Prisma.PersonWhereInput = {};
     if (params.state) {
@@ -41,7 +29,7 @@ export class PrismaPeopleRepository implements PeopleRepository {
     party?: string;
     page?: number;
     perPage?: number;
-  }): Promise<PeopleListResult> {
+  }): Promise<PeopleListResponse> {
     const where = this.buildWhere(params);
     const perPage = params.perPage ?? 20;
     const page = params.page ?? 1;
@@ -55,7 +43,7 @@ export class PrismaPeopleRepository implements PeopleRepository {
     return { items, total, page, perPage, totalPages: Math.ceil(total / perPage) };
   }
 
-  async listFilters(): Promise<PeopleFiltersResult> {
+  async listFilters(): Promise<PeopleFiltersResponse> {
     // Using distinct on the columns avoids fetching large row sets.
     const [states, parties] = await prisma.$transaction([
       prisma.person.findMany({

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchPeople, fetchPeopleFilters } from '@/api/people.api';
 import type { PeopleQuery } from '@/api/types';
 
-export const peopleKeys = {
+const peopleKeys = {
   list: (query: PeopleQuery) =>
     [
       'people',

@@ -8,7 +8,7 @@ import type { PeopleService } from './modules/people/people.service.js';
 import type { SyncService } from './modules/sync/sync.service.js';
 import { errorHandler, notFoundHandler } from './shared/middlewares/errorHandler.js';
 
-export interface AppDependencies {
+interface AppDependencies {
   peopleService: PeopleService;
   syncService: SyncService;
   corsOrigin: string;

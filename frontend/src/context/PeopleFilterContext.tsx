@@ -16,7 +16,7 @@ export type PeopleFilterAction =
   | { type: 'SET_PER_PAGE'; value: number }
   | { type: 'CLEAR' };
 
-export interface PeopleFilterContextValue {
+interface PeopleFilterContextValue {
   state: PeopleFiltersState;
   setStateFilter: (state: string) => void;
   setPartyFilter: (party: string) => void;

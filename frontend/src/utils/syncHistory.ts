@@ -3,7 +3,7 @@ type SyncHistory = Record<string, SyncRecord>;
 
 const STORAGE_KEY = 'openstates:sync-history';
 
-export function getSyncHistory(): SyncHistory {
+function getSyncHistory(): SyncHistory {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as SyncHistory;
   } catch {

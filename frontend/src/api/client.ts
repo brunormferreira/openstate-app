@@ -25,7 +25,7 @@ async function toApiError(response: Response): Promise<ApiError> {
   return new ApiError(`${response.status} ${response.statusText}`.trim(), response.status);
 }
 
-export interface RequestOptions {
+interface RequestOptions {
   method?: string;
   signal?: AbortSignal;
   timeoutMs?: number;

@@ -14,7 +14,7 @@ export interface OpenStatesPerson {
   openstates_url?: string;
 }
 
-export interface OpenStatesCurrentRole {
+interface OpenStatesCurrentRole {
   title: string;
   org_classification: string;
   district?: string | number;
@@ -27,7 +27,7 @@ export interface OpenStatesCompactJurisdiction {
   classification: string;
 }
 
-export interface OpenStatesPagination {
+interface OpenStatesPagination {
   per_page: number;
   page: number;
   max_page: number;

@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { themes } from '@/styles/theme';
 import type { ThemeMode } from '@/styles/theme';
 
-export interface ThemeModeContextValue {
+interface ThemeModeContextValue {
   mode: ThemeMode;
   toggleMode: () => void;
 }
