@@ -71,8 +71,10 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 Use the preset buttons on the frontend, or call the API directly:
 
 ```bash
-curl -X POST "http://localhost:3000/api/sync?jurisdiction=ocd-jurisdiction/country:us/state:ga/government"
+curl -X POST "http://localhost:3000/api/sync?jurisdiction=ga"
 ```
+
+The sync runs **synchronously** and returns HTTP 200 with `{ jurisdiction, peopleUpserted, durationMs }`. It accepts a 2-letter state code (`ga`), a full name (`georgia`), or an OCD id (`ocd-jurisdiction/country:us/state:ga/government`).
 
 ### Scheduled sync (optional)
 
@@ -117,7 +119,7 @@ cd frontend && npm run test:coverage
 <details>
 <summary>Click to expand</summary>
 
-Prerequisites: Node.js 20+, PostgreSQL running locally.
+Prerequisites: Node.js 22+, PostgreSQL running locally.
 
 ```bash
 # 1. Start the database (or use an existing PostgreSQL instance)
@@ -252,8 +254,9 @@ openstates/
     ├── vite.config.ts
     ├── eslint.config.js
     └── src/
-        ├── main.tsx        # Providers (QueryClient, Theme, Filters)
+        ├── main.tsx        # Providers (QueryClient, Theme, Filters, Sync, ErrorBoundary)
         ├── App.tsx         # Page shell + header
+        ├── App.styles.ts
         ├── vite-env.d.ts
         ├── test-setup.ts
         ├── api/
@@ -270,8 +273,8 @@ openstates/
         │   ├── Pagination/
         │   ├── Spinner/
         │   └── ThemeToggle/
-        │       ├── ComponentName.tsx
-        │       └── ComponentName.styles.ts
+        │       ├── ThemeToggle.tsx
+        │       └── ThemeToggle.styles.ts
         ├── context/
         │   ├── PeopleFilterContext.tsx
         │   ├── SyncContext.tsx
@@ -284,6 +287,8 @@ openstates/
         │       └── components/
         │           ├── PeopleFilters/
         │           ├── PeopleList/
+        │           │   ├── PeopleList.tsx
+        │           │   └── PeopleListContent.tsx
         │           ├── PersonCard/
         │           └── SyncPanel/
         ├── styles/
